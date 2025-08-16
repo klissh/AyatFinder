@@ -1,0 +1,7 @@
+gradio==4.8.0
+openai-whisper==20231117
+rapidfuzz==3.5.2
+numpy==1.24.3
+torch
+torchaudio
+ffmpeg-python

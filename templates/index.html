@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AyatFinder - Identifikasi Ayat Al-Quran</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='logo/AyatFinder.png') }}" alt="AyatFinder Logo" class="logo-img">
+                <h1>AyatFinder</h1>
+            </div>
+            <p class="subtitle">Identifikasi Ayat Al-Quran dari Audio dengan Teknologi AI</p>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Introduction Section -->
+            <section class="intro-section">
+                <div class="intro-card">
+                    <div class="intro-icon">
+                        <i class="fas fa-microphone-alt"></i>
+                    </div>
+                    <h2>Cara Kerja Aplikasi</h2>
+                    <p>Unggah file audio atau rekam langsung bacaan ayat Al-Quran Anda. Sistem AI kami akan mengidentifikasi ayat yang dibacakan dan memberikan informasi lengkap beserta terjemahannya.</p>
+                    <div class="features">
+                        <div class="feature">
+                            <i class="fas fa-upload"></i>
+                            <span>Upload Audio (MP3, WAV, M4A)</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-microphone"></i>
+                            <span>Rekam Langsung</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-search"></i>
+                            <span>Identifikasi Otomatis</span>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-language"></i>
+                            <span>Terjemahan Indonesia</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Audio Input Section -->
+            <section class="input-section">
+                <div class="input-tabs">
+                    <button class="tab-btn active" data-tab="upload">
+                        <i class="fas fa-upload"></i>
+                        Upload File
+                    </button>
+                    <button class="tab-btn" data-tab="record">
+                        <i class="fas fa-microphone"></i>
+                        Rekam Audio
+                    </button>
+                </div>
+
+                <!-- Upload Tab -->
+                <div class="tab-content active" id="upload-tab">
+                    <div class="upload-area" id="upload-area">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <h3>Drag & Drop File Audio</h3>
+                        <p>atau klik untuk memilih file</p>
+                        <p class="file-info">Mendukung MP3, WAV, M4A (Maks. 50MB)</p>
+                        <input type="file" id="audio-file" accept=".mp3,.wav,.m4a" hidden>
+                    </div>
+                    <div class="file-preview" id="file-preview" style="display: none;">
+                        <div class="file-info-display">
+                            <i class="fas fa-file-audio"></i>
+                            <div class="file-details">
+                                <span class="file-name" id="file-name"></span>
+                                <span class="file-size" id="file-size"></span>
+                            </div>
+                            <button class="remove-file" id="remove-file">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <audio controls id="audio-preview"></audio>
+                        <button class="process-btn" id="process-upload">
+                            <i class="fas fa-play"></i>
+                            Proses Audio
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Record Tab -->
+                <div class="tab-content" id="record-tab">
+                    <div class="record-area">
+                        <div class="record-controls">
+                            <button class="record-btn" id="start-record">
+                                <i class="fas fa-microphone"></i>
+                                Mulai Merekam
+                            </button>
+                            <button class="record-btn stop" id="stop-record" disabled>
+                                <i class="fas fa-stop"></i>
+                                Berhenti
+                            </button>
+                        </div>
+                        <div class="record-status" id="record-status">
+                            <div class="record-timer" id="record-timer">00:00</div>
+                            <div class="record-indicator" id="record-indicator"></div>
+                        </div>
+                        <div class="recorded-audio" id="recorded-audio" style="display: none;">
+                            <audio controls id="recorded-preview"></audio>
+                            <div class="record-actions">
+                                <button class="record-btn secondary" id="re-record">
+                                    <i class="fas fa-redo"></i>
+                                    Rekam Ulang
+                                </button>
+                                <button class="process-btn" id="process-record">
+                                    <i class="fas fa-play"></i>
+                                    Proses Audio
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Processing Section -->
+            <section class="processing-section" id="processing-section" style="display: none;">
+                <div class="processing-card">
+                    <div class="processing-animation">
+                        <div class="spinner"></div>
+                    </div>
+                    <h3>Memproses Audio...</h3>
+                    <p>Sistem sedang menganalisis audio dan mencocokkan dengan database Al-Quran</p>
+                    <div class="processing-steps">
+                        <div class="step active" id="step-1">
+                            <i class="fas fa-upload"></i>
+                            <span>Mengupload audio</span>
+                        </div>
+                        <div class="step" id="step-2">
+                            <i class="fas fa-microphone-alt"></i>
+                            <span>Transkripsi audio</span>
+                        </div>
+                        <div class="step" id="step-3">
+                            <i class="fas fa-search"></i>
+                            <span>Mencocokkan ayat</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section" id="results-section" style="display: none;">
+                <div class="result-card">
+                    <div class="result-header">
+                        <h2>Hasil Identifikasi</h2>
+                    </div>
+
+                    <div class="transcription-section">
+                        <h4>Hasil Transkripsi:</h4>
+                        <p class="transcription-text" id="transcription-text"></p>
+                    </div>
+
+                    <!-- All Matches Container -->
+                    <div class="all-matches-container" id="all-matches-container">
+                        <!-- Matches will be populated by JavaScript -->
+                    </div>
+
+                    <button class="new-search-btn" id="new-search">
+                        <i class="fas fa-plus"></i>
+                        Identifikasi Audio Baru
+                    </button>
+                </div>
+            </section>
+
+            <!-- Error Section -->
+            <section class="error-section" id="error-section" style="display: none;">
+                <div class="error-card">
+                    <div class="error-icon">
+                        <i class="fas fa-exclamation-triangle"></i>
+                    </div>
+                    <h3>Ayat Tidak Ditemukan</h3>
+                    <p id="error-message">Maaf, ayat tidak dapat diidentifikasi. Coba rekam dengan lebih jelas.</p>
+                    <div class="transcription-section">
+                        <h4>Hasil Transkripsi:</h4>
+                        <p class="transcription-text" id="error-transcription"></p>
+                    </div>
+                    <button class="new-search-btn" id="try-again">
+                        <i class="fas fa-redo"></i>
+                        Coba Lagi
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 AyatFinder. Dibuat dengan ❤️ untuk memudahkan pembelajaran Al-Quran.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
